@@ -1,61 +1,65 @@
-document.getElementById('procedureForm').addEventListener('submit', function(event) {
+document.getElementById('procedureForm').addEventListener('submit', function (event) {
   event.preventDefault();
 
-  const paciente = document.getElementById('paciente').value;
-  const cirujano = document.getElementById('cirujano').value;
-  const nombreCirujano = document.getElementById('nombreCirujano').value;
-  const codigo = document.getElementById('codigo').value;
-  const nombreProcedimiento = document.getElementById('nombreProcedimiento').value;
-  const fecha = document.getElementById('fecha').value;
-  const hora = document.getElementById('hora').value;
-  const resultado = document.getElementById('resultado').value;
+  // Obtener valores del formulario
+  const patientId = document.getElementById('patientId').value;
+  const practitionerId = document.getElementById('practitionerId').value;
+  const procedureCode = document.getElementById('procedureCode').value;
+  const procedureDisplay = document.getElementById('procedureDisplay').value;
+  const performedDate = document.getElementById('performedDate').value;
+  const performedTime = document.getElementById('performedTime').value;
+  const outcomeText = document.getElementById('outcome').value;
 
-  const procedimientoFHIR = {
+  // Formatear fecha y hora en ISO 8601
+  const performedDateTime = `${performedDate}T${performedTime}:00`;
+
+  // Crear recurso Procedure FHIR
+  const procedureResource = {
     resourceType: "Procedure",
     status: "completed",
     code: {
       coding: [
         {
           system: "http://snomed.info/sct",
-          code: codigo,
-          display: nombreProcedimiento
+          code: procedureCode,
+          display: procedureDisplay
         }
       ],
-      text: nombreProcedimiento
+      text: procedureDisplay
     },
     subject: {
-      reference: `Patient/${paciente}`
+      reference: `Patient/${patientId}`
     },
     performer: [
       {
         actor: {
-          reference: `Practitioner/${cirujano}`,
-          display: nombreCirujano
+          reference: `Practitioner/${practitionerId}`
         }
       }
     ],
-    performedDateTime: `${fecha}T${hora}:00`,
+    performedDateTime: performedDateTime,
     outcome: {
-      text: resultado
+      text: outcomeText
     }
   };
 
+  // Enviar recurso al backend FHIR
   fetch('https://hl7-fhir-ehr-leonardo.onrender.com/procedure/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(procedimientoFHIR)
+    body: JSON.stringify(procedureResource)
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error(`Error al crear el Procedure: ${response.statusText}`);
+      throw new Error(`Error al enviar el procedimiento: ${response.statusText}`);
     }
     return response.json();
   })
   .then(data => {
-    console.log('Procedure registrado:', data);
-    alert('Procedimiento registrado exitosamente. ID: ' + data.id);
+    console.log('Procedimiento creado:', data);
+    alert('¡Procedimiento registrado con éxito! ID: ' + data.id);
   })
   .catch(error => {
     console.error('Error:', error);
