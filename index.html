@@ -3,44 +3,88 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registro de Procedimiento Quirúrgico</title>
+  <title>Registro de Procedimiento FHIR</title>
   <style>
-    :root {
-      --bg: #f0fdf4;
-      --primary: #23855c;
-      --secondary: #b9f3da;
-      --text: #1b3d30;
-      --hover: #1a6e4c;
-    }
-
     body {
-      font-family: sans-serif;
-      background: var(--bg);
-      margin: 0; padding: 2rem;
+      font-family: Arial, sans-serif;
+      background: #f1fcf7;
+      padding: 2rem;
     }
 
-    .box {
+    .container {
       max-width: 600px;
       margin: auto;
       background: #fff;
       padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-      border: 1px solid var(--secondary);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       text-align: center;
-      color: var(--primary);
-      margin-bottom: 1rem;
+      color: #2d7c65;
     }
 
     label {
       display: block;
-      font-weight: 600;
-      margin: 1rem 0 .3rem;
-      color: var(--text);
+      margin-top: 1rem;
+      font-weight: bold;
     }
 
-    input, select, textarea {
-      width:
+    input, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      background-color: #2d7c65;
+      color: white;
+      padding: 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #25624f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Procedimiento Quirúrgico</h1>
+    <form id="procedureForm">
+      <label for="patientId">ID del Paciente *</label>
+      <input type="text" id="patientId" required />
+
+      <label for="practitionerId">ID del Cirujano *</label>
+      <input type="text" id="practitionerId" required />
+
+      <label for="procedureCode">Código SNOMED CT *</label>
+      <input type="text" id="procedureCode" placeholder="Ej: 80146002" required />
+
+      <label for="procedureDisplay">Nombre del Procedimiento *</label>
+      <input type="text" id="procedureDisplay" placeholder="Ej: Apendicectomía" required />
+
+      <label for="performedDate">Fecha del Procedimiento *</label>
+      <input type="date" id="performedDate" required />
+
+      <label for="performedTime">Hora del Procedimiento *</label>
+      <input type="time" id="performedTime" required />
+
+      <label for="outcome">Resultado del Procedimiento *</label>
+      <textarea id="outcome" rows="3" placeholder="Ej: Apéndice extirpado con éxito" required></textarea>
+
+      <button type="submit">Registrar Procedimiento</button>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
