@@ -1,111 +1,64 @@
-document.getElementById('form').addEventListener('submit', function(event) {
+document.getElementById('procedureForm').addEventListener('submit', function(event) {
   event.preventDefault();
 
   const paciente = document.getElementById('paciente').value;
-  const consulta = document.getElementById('consulta').value;
-  const medico = document.getElementById('medico').value;
-  const cedula = document.getElementById('cedula').value;
-  const dx = document.getElementById('dx').value;
-  const proc = document.getElementById('proc').value;
-  const just = document.getElementById('just').value;
-  const fechaCita = document.getElementById('fechaCita').value;
+  const cirujano = document.getElementById('cirujano').value;
+  const nombreCirujano = document.getElementById('nombreCirujano').value;
+  const codigo = document.getElementById('codigo').value;
+  const nombreProcedimiento = document.getElementById('nombreProcedimiento').value;
+  const fecha = document.getElementById('fecha').value;
   const hora = document.getElementById('hora').value;
+  const resultado = document.getElementById('resultado').value;
 
-  const serviceRequestData = {
-    paciente: paciente,
-    consulta: consulta,
-    medico: medico,
-    cedula: cedula,
-    diagnostico: dx,
-    procedimiento: proc,
-    justificacion: just,
-    fechaCita: fechaCita,
-    hora: hora
-  };
-
-  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/service-request/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(serviceRequestData)
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Error en la solicitud: ' + response.statusText);
-    }
-    return response.json();
-  })
-  .then(data => {
-    alert('Service Request creado exitosamente! ID: ' + data._id);
-    enviarProcedure(serviceRequestData);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Hubo un error en la solicitud: ' + error.message);
-  });
-});
-
-function enviarProcedure(data) {
-  const procedureData = {
+  const procedimientoFHIR = {
     resourceType: "Procedure",
     status: "completed",
     code: {
       coding: [
         {
           system: "http://snomed.info/sct",
-          code: "80146002", // SNOMED CT para apendicectomía
-          display: data.procedimiento
+          code: codigo,
+          display: nombreProcedimiento
         }
       ],
-      text: data.procedimiento
+      text: nombreProcedimiento
     },
     subject: {
-      reference: `Patient/${data.paciente}`
+      reference: `Patient/${paciente}`
     },
     performer: [
       {
         actor: {
-          reference: `Practitioner/${data.cedula}`,
-          display: data.medico
+          reference: `Practitioner/${cirujano}`,
+          display: nombreCirujano
         }
       }
     ],
-    performedDateTime: `${data.fechaCita}T${horaToTime(data.hora)}`,
+    performedDateTime: `${fecha}T${hora}:00`,
     outcome: {
-      text: "Apéndice extirpado con éxito"
-    },
-    note: [
-      {
-        text: data.justificacion
-      }
-    ]
+      text: resultado
+    }
   };
 
   fetch('https://hl7-fhir-ehr-leonardo.onrender.com/procedure/', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(procedureData)
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(procedimientoFHIR)
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error('Error al crear el Procedure: ' + response.statusText);
+      throw new Error(`Error al crear el Procedure: ${response.statusText}`);
     }
     return response.json();
   })
   .then(data => {
-    console.log('Procedure creado:', data);
-    alert('Procedure creado exitosamente. ID: ' + data.id);
+    console.log('Procedure registrado:', data);
+    alert('Procedimiento registrado exitosamente. ID: ' + data.id);
   })
   .catch(error => {
-    console.error('Error al crear el Procedure:', error);
+    console.error('Error:', error);
     alert('Error al registrar el procedimiento: ' + error.message);
   });
-}
-
-function horaToTime(hora) {
-  switch (hora) {
-    case "matutino": return "09:00:00";
-    case "vespertino": return "14:00:00";
-    case "nocturno": return "18:00:00";
-    default: return "09:00:00";
-  }
-}
+});
