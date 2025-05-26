@@ -27,24 +27,7 @@ document.getElementById('medicalForm').addEventListener('submit', function(event
   const patientStatus = document.getElementById('patientStatus').value;
   const followUp = document.getElementById('followUp').value;
 
-  // 4. Medicamentos dinámicos
-  const medications = [];
-  const container = document.getElementById('medicationsContainer');
-  const medicationBlocks = container.querySelectorAll('div[id^="medication-"]');
-
-  medicationBlocks.forEach(block => {
-    const id = block.id.split('-')[1]; // Extrae el número
-    const name = document.getElementById(`medicationName-${id}`)?.value;
-    const dose = document.getElementById(`medicationDose-${id}`)?.value;
-    const frequency = document.getElementById(`medicationFrequency-${id}`)?.value;
-    const route = document.getElementById(`medicationRoute-${id}`)?.value;
-
-    if (name && dose && frequency && route) {
-      medications.push({ name, dose, frequency, route });
-    }
-  });
-
-  // Objeto completo
+  // Objeto final sin medicamentos
   const serviceRequestData = {
     doctor: {
       name: doctorName,
@@ -71,30 +54,23 @@ document.getElementById('medicalForm').addEventListener('submit', function(event
       anesthesia,
       patientStatus,
       followUp
-    },
-    medications
+    }
   };
 
   console.log(serviceRequestData);
 
-  // Envío al backend
-  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/procedure/', {
+  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/clinical-procedure/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(serviceRequestData)
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Error en la solicitud: ' + response.statusText);
-    }
-    return response.json();
-  })
+  .then(response => response.json())
   .then(data => {
     console.log('Success:', data);
-    alert('¡Solicitud creada exitosamente! ID: ' + data._id);
+    alert('Registro creado exitosamente!');
   })
-  .catch(error => {
+  .catch((error) => {
     console.error('Error:', error);
-    alert('Hubo un error al enviar la solicitud: ' + error.message);
+    alert('Hubo un error al crear el registro.');
   });
 });
