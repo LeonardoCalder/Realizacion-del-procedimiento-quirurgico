@@ -3,18 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Realización Del Procedimiento Quirúrgico</title>
+  <title>FRealización del procedimiento quirúrgico</title>
   <style>
+    :root {
+      --main-color: #009999;
+      --accent-color: #006666;
+      --bg-color: #e0f7f7;
+      --text-color: #033;
+      --form-bg: #ffffff;
+      --input-bg: #f1fdfc;
+      --input-border: #b2dfdb;
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #e0f7f7;
+      background-color: var(--bg-color);
       margin: 0;
       padding: 0;
-      color: #004d40;
+      color: var(--text-color);
     }
 
     header {
-      background-color: #00695c;
+      background-color: var(--main-color);
       color: white;
       padding: 1.5rem;
       text-align: center;
@@ -28,11 +38,11 @@
       gap: 2rem;
       max-width: 1000px;
       margin: 2rem auto;
-      background-color: #ffffff;
+      background-color: var(--form-bg);
       padding: 2rem;
       border-radius: 1rem;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border: 3px solid #00bfa5;
+      border: 3px solid var(--main-color);
     }
 
     form {
@@ -44,23 +54,23 @@
     h2 {
       margin-top: 2rem;
       margin-bottom: 0.5rem;
-      color: #00695c;
-      border-bottom: 2px solid #00bfa5;
+      color: var(--accent-color);
+      border-bottom: 2px solid var(--main-color);
       padding-bottom: 0.3rem;
     }
 
     label {
       margin-top: 1rem;
       font-weight: bold;
-      color: #00695c;
+      color: var(--accent-color);
     }
 
     input, select, textarea {
       padding: 0.7rem;
       font-size: 1rem;
-      border: 1px solid #b2dfdb;
+      border: 1px solid var(--input-border);
       border-radius: 5px;
-      background-color: #f1fdfc;
+      background-color: var(--input-bg);
       width: 100%;
       box-sizing: border-box;
     }
@@ -72,7 +82,7 @@
     button {
       margin-top: 2rem;
       padding: 0.8rem;
-      background-color: #00bfa5;
+      background-color: var(--main-color);
       color: white;
       font-weight: bold;
       border: none;
@@ -84,7 +94,7 @@
     }
 
     button:hover {
-      background-color: #009688;
+      background-color: var(--accent-color);
     }
 
     #result {
@@ -92,7 +102,7 @@
       text-align: center;
       margin-top: 1rem;
       font-weight: bold;
-      color: #004d40;
+      color: var(--text-color);
     }
 
     @media (max-width: 768px) {
@@ -112,12 +122,10 @@
 </head>
 <body>
 
-  <header>Formulario Solicitud Procedimiento Médico (FHIR)</header>
+  <header>Realización del procedimiento quirúrgico</header>
 
   <div class="container">
     <form id="medicalForm">
-
-      <!-- 1. Datos del Médico -->
       <h2>1. Datos del Médico</h2>
       <label for="doctorName">Nombre Completo</label>
       <input type="text" id="doctorName" required />
@@ -128,7 +136,6 @@
       <label for="institution">Institución</label>
       <input type="text" id="institution" required />
 
-      <!-- 2. Datos del Paciente -->
       <h2>2. Datos del Paciente</h2>
       <label for="patientName">Nombre Completo</label>
       <input type="text" id="patientName" required />
@@ -162,7 +169,6 @@
       <label for="procedureDone">Procedimiento Realizado</label>
       <input type="text" id="procedureDone" required />
 
-      <!-- 3. Información del Procedimiento -->
       <h2>3. Información del Procedimiento</h2>
       <label for="procedureName">Nombre del Procedimiento</label>
       <input type="text" id="procedureName" required />
@@ -195,7 +201,6 @@
       <input type="text" id="followUp" required />
 
       <button type="submit">Enviar Solicitud</button>
-
     </form>
 
     <div id="result"></div>
@@ -205,67 +210,39 @@
     document.getElementById('medicalForm').addEventListener('submit', function(event) {
       event.preventDefault();
 
-      // 1. Datos del Médico
-      const doctorName = document.getElementById('doctorName').value;
-      const specialty = document.getElementById('specialty').value;
-      const institution = document.getElementById('institution').value;
-
-      // 2. Datos del Paciente
-      const patientName = document.getElementById('patientName').value;
-      const documentType = document.getElementById('documentType').value;
-      const documentNumber = document.getElementById('documentNumber').value;
-      const age = document.getElementById('age').value;
-      const sex = document.getElementById('sex').value;
-      const mainDiagnosis = document.getElementById('mainDiagnosis').value;
-      const procedureDone = document.getElementById('procedureDone').value;
-
-      // 3. Información del Procedimiento
-      const procedureName = document.getElementById('procedureName').value;
-      const procedureCode = document.getElementById('procedureCode').value;
-      const procedureDate = document.getElementById('procedureDate').value;
-      const procedureTime = document.getElementById('procedureTime').value;
-      const procedureType = document.getElementById('procedureType').value;
-      const procedureDescription = document.getElementById('procedureDescription').value;
-      const technique = document.getElementById('technique').value;
-      const anesthesia = document.getElementById('anesthesia').value;
-      const patientStatus = document.getElementById('patientStatus').value;
-      const followUp = document.getElementById('followUp').value;
-
-      const serviceRequestData = {
+      const data = {
         doctor: {
-          name: doctorName,
-          specialty,
-          institution
+          name: document.getElementById('doctorName').value,
+          specialty: document.getElementById('specialty').value,
+          institution: document.getElementById('institution').value
         },
         patient: {
-          name: patientName,
-          documentType,
-          documentNumber,
-          age,
-          sex,
-          mainDiagnosis,
-          procedureDone
+          name: document.getElementById('patientName').value,
+          documentType: document.getElementById('documentType').value,
+          documentNumber: document.getElementById('documentNumber').value,
+          age: document.getElementById('age').value,
+          sex: document.getElementById('sex').value,
+          mainDiagnosis: document.getElementById('mainDiagnosis').value,
+          procedureDone: document.getElementById('procedureDone').value
         },
         procedure: {
-          name: procedureName,
-          code: procedureCode,
-          date: procedureDate,
-          time: procedureTime,
-          type: procedureType,
-          description: procedureDescription,
-          technique,
-          anesthesia,
-          patientStatus,
-          followUp
+          name: document.getElementById('procedureName').value,
+          code: document.getElementById('procedureCode').value,
+          date: document.getElementById('procedureDate').value,
+          time: document.getElementById('procedureTime').value,
+          type: document.getElementById('procedureType').value,
+          description: document.getElementById('procedureDescription').value,
+          technique: document.getElementById('technique').value,
+          anesthesia: document.getElementById('anesthesia').value,
+          patientStatus: document.getElementById('patientStatus').value,
+          followUp: document.getElementById('followUp').value
         }
       };
-
-      console.log(serviceRequestData);
 
       fetch('https://hl7-fhir-ehr-leonardo.onrender.com/clinical-procedure/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(serviceRequestData)
+        body: JSON.stringify(data)
       })
       .then(response => response.json())
       .then(data => {
@@ -281,3 +258,4 @@
 
 </body>
 </html>
+
