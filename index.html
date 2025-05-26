@@ -3,88 +3,349 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registro de Procedimiento FHIR</title>
+  <title>Formulario Médico</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f1fcf7;
-      padding: 2rem;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      font-family: 'Poppins', sans-serif;
+      background-color: #fdf7f8;
+      color: #4b1c26;
+      padding: 20px;
     }
 
     h1 {
       text-align: center;
-      color: #2d7c65;
+      color: #701f32;
+      margin-bottom: 30px;
+    }
+
+    form {
+      background-color: #f3e6e9;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+      box-shadow: 0 0 15px rgba(112, 31, 50, 0.15);
+    }
+
+    h2 {
+      color: #a04254;
+      border-bottom: 2px solid #d6aabb;
+      padding-bottom: 5px;
+      margin-top: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
     }
 
     label {
       display: block;
-      margin-top: 1rem;
-      font-weight: bold;
+      margin-bottom: 5px;
+      font-weight: 500;
     }
 
-    input, textarea {
+    input[type="text"],
+    input[type="number"],
+    input[type="time"],
+    input[type="date"],
+    select,
+    textarea {
       width: 100%;
-      padding: 0.6rem;
-      margin-top: 0.3rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      padding: 10px;
+      border: 1px solid #d1b2b8;
+      border-radius: 8px;
+      background-color: #fff7f9;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
     }
 
     button {
-      margin-top: 1.5rem;
-      width: 100%;
-      background-color: #2d7c65;
+      background-color: #a04254;
       color: white;
-      padding: 1rem;
-      font-size: 1rem;
+      padding: 12px 25px;
       border: none;
       border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
+      margin-top: 30px;
     }
 
     button:hover {
-      background-color: #25624f;
+      background-color: #8b3748;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Procedimiento Quirúrgico</h1>
-    <form id="procedureForm">
-      <label for="patientId">ID del Paciente *</label>
-      <input type="text" id="patientId" required />
+  <h1>Formulario de Procedimiento Médico</h1>
+  <form id="medicalForm">
 
-      <label for="practitionerId">ID del Cirujano *</label>
-      <input type="text" id="practitionerId" required />
+    <!-- 1. Datos del Médico Tratante -->
+    <h2>1. Datos del Médico Tratante</h2>
+    <div class="form-group">
+      <label for="doctorName">Nombre del Médico:</label>
+      <input type="text" id="doctorName" name="doctorName" required>
+    </div>
+    <div class="form-group">
+      <label for="specialty">Especialidad Médica:</label>
+      <input type="text" id="specialty" name="specialty" required>
+    </div>
+    <div class="form-group">
+      <label for="institution">Nombre de la Institución Médica:</label>
+      <input type="text" id="institution" name="institution" required>
+    </div>
 
-      <label for="procedureCode">Código SNOMED CT *</label>
-      <input type="text" id="procedureCode" placeholder="Ej: 80146002" required />
+    <!-- 2. Datos del Paciente -->
+    <h2>2. Datos del Paciente</h2>
+    <div class="form-group">
+      <label for="patientName">Nombre completo:</label>
+      <input type="text" id="patientName" name="patientName" required>
+    </div>
+    <div class="form-group">
+      <label for="documentType">Tipo de documento:</label>
+      <select id="documentType" name="documentType" required>
+        <option value="">Seleccione una opción</option>
+        <option value="CC">Cédula de Ciudadanía</option>
+        <option value="TI">Tarjeta de Identidad</option>
+        <option value="CE">Cédula de Extranjería</option>
+        <option value="PA">Pasaporte</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="documentNumber">Número de documento:</label>
+      <input type="text" id="documentNumber" name="documentNumber" required>
+    </div>
+    <div class="form-group">
+      <label for="age">Edad:</label>
+      <input type="number" id="age" name="age" required>
+    </div>
+    <div class="form-group">
+      <label for="sex">Sexo:</label>
+      <select id="sex" name="sex" required>
+        <option value="">Seleccione</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="mainDiagnosis">Diagnóstico principal:</label>
+      <input type="text" id="mainDiagnosis" name="mainDiagnosis" required>
+    </div>
+    <div class="form-group">
+      <label for="procedureDone">Procedimiento realizado:</label>
+      <input type="text" id="procedureDone" name="procedureDone" required>
+    </div>
 
-      <label for="procedureDisplay">Nombre del Procedimiento *</label>
-      <input type="text" id="procedureDisplay" placeholder="Ej: Apendicectomía" required />
+    <!-- 3. Información del Procedimiento -->
+    <h2>3. Información del Procedimiento</h2>
+    <div class="form-group">
+      <label for="procedureName">Nombre del procedimiento:</label>
+      <input type="text" id="procedureName" name="procedureName" required>
+    </div>
+    <div class="form-group">
+      <label for="procedureCode">Código del procedimiento (CIE-11):</label>
+      <input type="text" id="procedureCode" name="procedureCode">
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="procedureDate">Fecha del procedimiento:</label>
+        <input type="date" id="procedureDate" name="procedureDate" required>
+      </div>
+      <div class="form-group">
+        <label for="procedureTime">Hora del procedimiento:</label>
+        <input type="time" id="procedureTime" name="procedureTime" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="procedureType">Tipo de procedimiento:</label>
+      <input type="text" id="procedureType" name="procedureType">
+    </div>
+    <div class="form-group">
+      <label for="procedureDescription">Descripción detallada del procedimiento:</label>
+      <textarea id="procedureDescription" name="procedureDescription" rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="technique">Técnica utilizada:</label>
+      <input type="text" id="technique" name="technique">
+    </div>
+    <div class="form-group">
+      <label for="anesthesia">Anestesia utilizada (tipo, dosis, vía):</label>
+      <input type="text" id="anesthesia" name="anesthesia">
+    </div>
+    <div class="form-group">
+      <label for="patientStatus">Estado del paciente al finalizar:</label>
+      <input type="text" id="patientStatus" name="patientStatus">
+    </div>
+    <div class="form-group">
+      <label for="followUp">Próxima consulta o seguimiento recomendado:</label>
+      <input type="text" id="followUp" name="followUp">
+    </div>
 
-      <label for="performedDate">Fecha del Procedimiento *</label>
-      <input type="date" id="performedDate" required />
+    <!-- 4. Medicamentos Recetados -->
+    <h2>4. Medicamentos Recetados</h2>
+    <div id="medicationsContainer"></div>
+    <button type="button" onclick="addMedication()">+ Agregar Medicamento</button>
 
-      <label for="performedTime">Hora del Procedimiento *</label>
-      <input type="time" id="performedTime" required />
+    <button type="submit">Enviar Solicitud</button>
+  </form>
 
-      <label for="outcome">Resultado del Procedimiento *</label>
-      <textarea id="outcome" rows="3" placeholder="Ej: Apéndice extirpado con éxito" required></textarea>
+  <!-- Scripts -->
+  <script>
+    let medCount = 0;
 
-      <button type="submit">Registrar Procedimiento</button>
-    </form>
-  </div>
+    function addMedication() {
+      medCount++;
+      const container = document.getElementById('medicationsContainer');
 
-  <script src="app.js"></script>
+      const medGroup = document.createElement('div');
+      medGroup.className = 'form-group';
+      medGroup.id = `medication-${medCount}`;
+      medGroup.style.border = "1px solid #d1b2b8";
+      medGroup.style.borderRadius = "10px";
+      medGroup.style.padding = "15px";
+      medGroup.style.marginBottom = "20px";
+      medGroup.style.backgroundColor = "#fff7f9";
+
+      medGroup.innerHTML = `
+        <label><strong>Medicamento ${medCount}</strong></label>
+        <label for="medicationName-${medCount}">Nombre:</label>
+        <input type="text" id="medicationName-${medCount}" name="medications[${medCount}][name]" required>
+
+        <label for="medicationDose-${medCount}">Dosis:</label>
+        <input type="text" id="medicationDose-${medCount}" name="medications[${medCount}][dose]" required>
+
+        <label for="medicationFrequency-${medCount}">Frecuencia:</label>
+        <input type="text" id="medicationFrequency-${medCount}" name="medications[${medCount}][frequency]" required>
+
+        <label for="medicationRoute-${medCount}">Vía de administración:</label>
+        <input type="text" id="medicationRoute-${medCount}" name="medications[${medCount}][route]" required>
+
+        <button type="button" onclick="removeMedication('medication-${medCount}')">Eliminar</button>
+      `;
+
+      container.appendChild(medGroup);
+    }
+
+    function removeMedication(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.remove();
+      }
+    }
+
+    document.getElementById('medicalForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // 1. Datos del Médico
+      const doctorName = document.getElementById('doctorName').value;
+      const specialty = document.getElementById('specialty').value;
+      const institution = document.getElementById('institution').value;
+
+      // 2. Datos del Paciente
+      const patientName = document.getElementById('patientName').value;
+      const documentType = document.getElementById('documentType').value;
+      const documentNumber = document.getElementById('documentNumber').value;
+      const age = document.getElementById('age').value;
+      const sex = document.getElementById('sex').value;
+      const mainDiagnosis = document.getElementById('mainDiagnosis').value;
+      const procedureDone = document.getElementById('procedureDone').value;
+
+      // 3. Información del Procedimiento
+      const procedureName = document.getElementById('procedureName').value;
+      const procedureCode = document.getElementById('procedureCode').value;
+      const procedureDate = document.getElementById('procedureDate').value;
+      const procedureTime = document.getElementById('procedureTime').value;
+      const procedureType = document.getElementById('procedureType').value;
+      const procedureDescription = document.getElementById('procedureDescription').value;
+      const technique = document.getElementById('technique').value;
+      const anesthesia = document.getElementById('anesthesia').value;
+      const patientStatus = document.getElementById('patientStatus').value;
+      const followUp = document.getElementById('followUp').value;
+
+      // 4. Medicamentos dinámicos
+      const medications = [];
+      const container = document.getElementById('medicationsContainer');
+      const medicationBlocks = container.querySelectorAll('div[id^="medication-"]');
+
+      medicationBlocks.forEach(block => {
+        const id = block.id.split('-')[1]; // Extrae el número
+        const name = document.getElementById(`medicationName-${id}`)?.value;
+        const dose = document.getElementById(`medicationDose-${id}`)?.value;
+        const frequency = document.getElementById(`medicationFrequency-${id}`)?.value;
+        const route = document.getElementById(`medicationRoute-${id}`)?.value;
+
+        if (name && dose && frequency && route) {
+          medications.push({ name, dose, frequency, route });
+        }
+      });
+
+      // Objeto completo
+      const serviceRequestData = {
+        doctor: {
+          name: doctorName,
+          specialty,
+          institution
+        },
+        patient: {
+          name: patientName,
+          documentType,
+          documentNumber,
+          age,
+          sex,
+          mainDiagnosis,
+          procedureDone
+        },
+        procedure: {
+          name: procedureName,
+          code: procedureCode,
+          date: procedureDate,
+          time: procedureTime,
+          type: procedureType,
+          description: procedureDescription,
+          technique,
+          anesthesia,
+          patientStatus,
+          followUp
+        },
+        medications
+      };
+
+      console.log(serviceRequestData);
+
+      // Envío al backend
+      fetch('https://hl7-fhir-ehr-solangie-9665.onrender.com/clinical-procedure/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(serviceRequestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert('Registro creado exitosamente!');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Hubo un error al crear el registro.');
+        });
+      });   
+  </script>
 </body>
 </html>

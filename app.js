@@ -1,68 +1,100 @@
-document.getElementById('procedureForm').addEventListener('submit', function (event) {
+document.getElementById('medicalForm').addEventListener('submit', function(event) {
   event.preventDefault();
 
-  // Obtener valores del formulario
-  const patientId = document.getElementById('patientId').value;
-  const practitionerId = document.getElementById('practitionerId').value;
+  // 1. Datos del Médico
+  const doctorName = document.getElementById('doctorName').value;
+  const specialty = document.getElementById('specialty').value;
+  const institution = document.getElementById('institution').value;
+
+  // 2. Datos del Paciente
+  const patientName = document.getElementById('patientName').value;
+  const documentType = document.getElementById('documentType').value;
+  const documentNumber = document.getElementById('documentNumber').value;
+  const age = document.getElementById('age').value;
+  const sex = document.getElementById('sex').value;
+  const mainDiagnosis = document.getElementById('mainDiagnosis').value;
+  const procedureDone = document.getElementById('procedureDone').value;
+
+  // 3. Información del Procedimiento
+  const procedureName = document.getElementById('procedureName').value;
   const procedureCode = document.getElementById('procedureCode').value;
-  const procedureDisplay = document.getElementById('procedureDisplay').value;
-  const performedDate = document.getElementById('performedDate').value;
-  const performedTime = document.getElementById('performedTime').value;
-  const outcomeText = document.getElementById('outcome').value;
+  const procedureDate = document.getElementById('procedureDate').value;
+  const procedureTime = document.getElementById('procedureTime').value;
+  const procedureType = document.getElementById('procedureType').value;
+  const procedureDescription = document.getElementById('procedureDescription').value;
+  const technique = document.getElementById('technique').value;
+  const anesthesia = document.getElementById('anesthesia').value;
+  const patientStatus = document.getElementById('patientStatus').value;
+  const followUp = document.getElementById('followUp').value;
 
-  // Formatear fecha y hora en ISO 8601
-  const performedDateTime = `${performedDate}T${performedTime}:00`;
+  // 4. Medicamentos dinámicos
+  const medications = [];
+  const container = document.getElementById('medicationsContainer');
+  const medicationBlocks = container.querySelectorAll('div[id^="medication-"]');
 
-  // Crear recurso Procedure FHIR
-  const procedureResource = {
-    resourceType: "Procedure",
-    status: "completed",
-    code: {
-      coding: [
-        {
-          system: "http://snomed.info/sct",
-          code: procedureCode,
-          display: procedureDisplay
-        }
-      ],
-      text: procedureDisplay
-    },
-    subject: {
-      reference: `Patient/${patientId}`
-    },
-    performer: [
-      {
-        actor: {
-          reference: `Practitioner/${practitionerId}`
-        }
-      }
-    ],
-    performedDateTime: performedDateTime,
-    outcome: {
-      text: outcomeText
+  medicationBlocks.forEach(block => {
+    const id = block.id.split('-')[1]; // Extrae el número
+    const name = document.getElementById(`medicationName-${id}`)?.value;
+    const dose = document.getElementById(`medicationDose-${id}`)?.value;
+    const frequency = document.getElementById(`medicationFrequency-${id}`)?.value;
+    const route = document.getElementById(`medicationRoute-${id}`)?.value;
+
+    if (name && dose && frequency && route) {
+      medications.push({ name, dose, frequency, route });
     }
+  });
+
+  // Objeto completo
+  const serviceRequestData = {
+    doctor: {
+      name: doctorName,
+      specialty,
+      institution
+    },
+    patient: {
+      name: patientName,
+      documentType,
+      documentNumber,
+      age,
+      sex,
+      mainDiagnosis,
+      procedureDone
+    },
+    procedure: {
+      name: procedureName,
+      code: procedureCode,
+      date: procedureDate,
+      time: procedureTime,
+      type: procedureType,
+      description: procedureDescription,
+      technique,
+      anesthesia,
+      patientStatus,
+      followUp
+    },
+    medications
   };
 
-  // Enviar recurso al backend FHIR
-  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/procedure/', {
+  console.log(serviceRequestData);
+
+  // Envío al backend
+  fetch('https://hl7-fhir-ehr-solangie-9665.onrender.com/clinical-procedure/', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(procedureResource)
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(serviceRequestData)
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error(`Error al enviar el procedimiento: ${response.statusText}`);
+      throw new Error('Error en la solicitud: ' + response.statusText);
     }
     return response.json();
   })
   .then(data => {
-    console.log('Procedimiento creado:', data);
-    alert('¡Procedimiento registrado con éxito! ID: ' + data.id);
+    console.log('Success:', data);
+    alert('¡Solicitud creada exitosamente! ID: ' + data._id);
   })
   .catch(error => {
     console.error('Error:', error);
-    alert('Error al registrar el procedimiento: ' + error.message);
+    alert('Hubo un error al enviar la solicitud: ' + error.message);
   });
 });
