@@ -78,7 +78,7 @@ document.getElementById('medicalForm').addEventListener('submit', function(event
   console.log(serviceRequestData);
 
   // Envío al backend
-  fetch('https://hl7-fhir-ehr-solangie-9665.onrender.com/clinical-procedure/', {
+  fetch('https://hl7-fhir-ehr-leonardo.onrender.com/procedure/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(serviceRequestData)
