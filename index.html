@@ -2,119 +2,204 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Formulario Solicitud Procedimiento Médico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulario Solicitud Procedimiento Médico (FHIR)</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e0f7f7;
+      margin: 0;
+      padding: 0;
+      color: #004d40;
     }
-    label {
-      display: block;
-      margin-top: 10px;
+
+    header {
+      background-color: #00695c;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
     }
-    input, select, textarea, button {
-      margin-top: 5px;
-      padding: 5px;
-      width: 100%;
-      max-width: 400px;
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 2rem auto;
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border: 3px solid #00bfa5;
     }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      grid-column: span 2;
+    }
+
     h2 {
-      margin-top: 30px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 5px;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+      color: #00695c;
+      border-bottom: 2px solid #00bfa5;
+      padding-bottom: 0.3rem;
     }
-    button[type="submit"] {
-      margin-top: 20px;
-      width: auto;
+
+    label {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #00695c;
+    }
+
+    input, select, textarea {
+      padding: 0.7rem;
+      font-size: 1rem;
+      border: 1px solid #b2dfdb;
+      border-radius: 5px;
+      background-color: #f1fdfc;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 2rem;
+      padding: 0.8rem;
+      background-color: #00bfa5;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
+      transition: background 0.3s ease;
+      max-width: 200px;
+      align-self: flex-start;
+    }
+
+    button:hover {
+      background-color: #009688;
+    }
+
+    #result {
+      grid-column: span 2;
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #004d40;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      form {
+        grid-column: span 1;
+      }
+
+      #result {
+        grid-column: span 1;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>Formulario Solicitud Procedimiento Médico (FHIR)</h1>
+  <header>Formulario Solicitud Procedimiento Médico (FHIR)</header>
 
-  <form id="medicalForm">
+  <div class="container">
+    <form id="medicalForm">
 
-    <!-- 1. Datos del Médico -->
-    <h2>1. Datos del Médico</h2>
-    <label for="doctorName">Nombre Completo</label>
-    <input type="text" id="doctorName" required />
+      <!-- 1. Datos del Médico -->
+      <h2>1. Datos del Médico</h2>
+      <label for="doctorName">Nombre Completo</label>
+      <input type="text" id="doctorName" required />
 
-    <label for="specialty">Especialidad</label>
-    <input type="text" id="specialty" required />
+      <label for="specialty">Especialidad</label>
+      <input type="text" id="specialty" required />
 
-    <label for="institution">Institución</label>
-    <input type="text" id="institution" required />
+      <label for="institution">Institución</label>
+      <input type="text" id="institution" required />
 
-    <!-- 2. Datos del Paciente -->
-    <h2>2. Datos del Paciente</h2>
-    <label for="patientName">Nombre Completo</label>
-    <input type="text" id="patientName" required />
+      <!-- 2. Datos del Paciente -->
+      <h2>2. Datos del Paciente</h2>
+      <label for="patientName">Nombre Completo</label>
+      <input type="text" id="patientName" required />
 
-    <label for="documentType">Tipo de Documento</label>
-    <select id="documentType" required>
-      <option value="CC">Cédula de Ciudadanía</option>
-      <option value="TI">Tarjeta de Identidad</option>
-      <option value="CE">Cédula de Extranjería</option>
-      <option value="PP">Pasaporte</option>
-    </select>
+      <label for="documentType">Tipo de Documento</label>
+      <select id="documentType" required>
+        <option value="" disabled selected>Seleccione una opción</option>
+        <option value="CC">Cédula de Ciudadanía</option>
+        <option value="TI">Tarjeta de Identidad</option>
+        <option value="CE">Cédula de Extranjería</option>
+        <option value="PP">Pasaporte</option>
+      </select>
 
-    <label for="documentNumber">Número de Documento</label>
-    <input type="text" id="documentNumber" required />
+      <label for="documentNumber">Número de Documento</label>
+      <input type="text" id="documentNumber" required />
 
-    <label for="age">Edad</label>
-    <input type="number" id="age" min="0" required />
+      <label for="age">Edad</label>
+      <input type="number" id="age" min="0" required />
 
-    <label for="sex">Sexo</label>
-    <select id="sex" required>
-      <option value="M">Masculino</option>
-      <option value="F">Femenino</option>
-      <option value="O">Otro</option>
-    </select>
+      <label for="sex">Sexo</label>
+      <select id="sex" required>
+        <option value="" disabled selected>Seleccione una opción</option>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+        <option value="O">Otro</option>
+      </select>
 
-    <label for="mainDiagnosis">Diagnóstico Principal</label>
-    <input type="text" id="mainDiagnosis" required />
+      <label for="mainDiagnosis">Diagnóstico Principal</label>
+      <input type="text" id="mainDiagnosis" required />
 
-    <label for="procedureDone">Procedimiento Realizado</label>
-    <input type="text" id="procedureDone" required />
+      <label for="procedureDone">Procedimiento Realizado</label>
+      <input type="text" id="procedureDone" required />
 
-    <!-- 3. Información del Procedimiento -->
-    <h2>3. Información del Procedimiento</h2>
-    <label for="procedureName">Nombre del Procedimiento</label>
-    <input type="text" id="procedureName" required />
+      <!-- 3. Información del Procedimiento -->
+      <h2>3. Información del Procedimiento</h2>
+      <label for="procedureName">Nombre del Procedimiento</label>
+      <input type="text" id="procedureName" required />
 
-    <label for="procedureCode">Código del Procedimiento</label>
-    <input type="text" id="procedureCode" required />
+      <label for="procedureCode">Código del Procedimiento</label>
+      <input type="text" id="procedureCode" required />
 
-    <label for="procedureDate">Fecha del Procedimiento</label>
-    <input type="date" id="procedureDate" required />
+      <label for="procedureDate">Fecha del Procedimiento</label>
+      <input type="date" id="procedureDate" required />
 
-    <label for="procedureTime">Hora del Procedimiento</label>
-    <input type="time" id="procedureTime" required />
+      <label for="procedureTime">Hora del Procedimiento</label>
+      <input type="time" id="procedureTime" required />
 
-    <label for="procedureType">Tipo de Procedimiento</label>
-    <input type="text" id="procedureType" required />
+      <label for="procedureType">Tipo de Procedimiento</label>
+      <input type="text" id="procedureType" required />
 
-    <label for="procedureDescription">Descripción</label>
-    <textarea id="procedureDescription" rows="3" required></textarea>
+      <label for="procedureDescription">Descripción</label>
+      <textarea id="procedureDescription" rows="3" required></textarea>
 
-    <label for="technique">Técnica Usada</label>
-    <input type="text" id="technique" required />
+      <label for="technique">Técnica Usada</label>
+      <input type="text" id="technique" required />
 
-    <label for="anesthesia">Anestesia</label>
-    <input type="text" id="anesthesia" required />
+      <label for="anesthesia">Anestesia</label>
+      <input type="text" id="anesthesia" required />
 
-    <label for="patientStatus">Estado del Paciente</label>
-    <input type="text" id="patientStatus" required />
+      <label for="patientStatus">Estado del Paciente</label>
+      <input type="text" id="patientStatus" required />
 
-    <label for="followUp">Seguimiento</label>
-    <input type="text" id="followUp" required />
+      <label for="followUp">Seguimiento</label>
+      <input type="text" id="followUp" required />
 
-    <button type="submit">Enviar Solicitud</button>
+      <button type="submit">Enviar Solicitud</button>
 
-  </form>
+    </form>
+
+    <div id="result"></div>
+  </div>
 
   <script>
     document.getElementById('medicalForm').addEventListener('submit', function(event) {
